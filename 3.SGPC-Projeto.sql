@@ -1,18 +1,6 @@
-          /* ALTER TABLES FOR INCREMENTS */
+                    /*       ÍNDICES         */
 SET SCHEMA 'sgpcdatabase';
-          
-ALTER SEQUENCE tipo_usuario_id_seq      RESTART WITH 1100;
-ALTER SEQUENCE tipo_patrimonio_id_seq   RESTART WITH 2200;
-ALTER SEQUENCE tipo_bolsista_id_seq     RESTART WITH 3300;
-ALTER SEQUENCE tipo_bolsista_id_seq     RESTART WITH 3300;
-ALTER SEQUENCE os_pc_id_seq             RESTART WITH 100;
-ALTER SEQUENCE modelo_pc_id_seq         RESTART WITH 200;
-ALTER SEQUENCE patrimonio_id_seq        RESTART WITH 1;
-
-
-           
-           /*       ÍNDICES         */
-           
+                    
 CREATE INDEX id_patrimonio_idx ON patrimonio USING
 btree (id);           
                
@@ -63,13 +51,16 @@ HASH (bolsista);
 CREATE INDEX predio_responsabilidade ON responsabilidade USING
 HASH (predio);
 
-           
+insert into patrimonio_pc
+
+values ('',)
            /*  FUNÇÕES E TRIGGGERS */
 
 CREATE OR REPLACE FUNCTION inserir_pc(v_tombamento 	VARCHAR(12),
                                       v_descricao 	VARCHAR(50),
                                       v_estado 		VARCHAR(30),
                                       v_localidade 	SMALLINT,
+                                      v_alienado	BOOLEAN,
                                       v_serialpc 	VARCHAR,
                                       v_modelo 		SMALLINT,
                                       v_os 			SMALLINT,
@@ -78,20 +69,10 @@ CREATE OR REPLACE FUNCTION inserir_pc(v_tombamento 	VARCHAR(12),
                                       v_hd 			SMALLINT)
 RETURNS VOID AS $$
 DECLARE
-    v_tombamento      ALIAS FOR  $1;
-    v_descricao       ALIAS FOR  $2;
-    v_estado          ALIAS FOR  $3;
-    v_localidadeAS    ALIAS FOR  $4;
-    v_serialpc        ALIAS FOR  $5;
-    v_modelo          ALIAS FOR  $6;
-    v_os              ALIAS FOR  $7;
-    v_ram             ALIAS FOR  $8;
-    v_ram_ddr         ALIAS FOR  $9;
-    v_hd              ALIAS FOR  $10;
-    v_id              BIGINT;
+    v_tipo smallint := 2205;
 BEGIN 
-	INSERT INTO patrimonio_pc (tombamento,descricao,estado,tipo,localidade,serialpc,modelo,os,ram,ram_ddr,hd) 
-    VALUES (v_tombamento,v_descricao,v_estado,2205,v_localidade,v_id,v_serialpc,v_modelo,v_os,v_ram,v_ram_ddr,v_hd);
+	INSERT INTO patrimonio_pc (tombamento,descricao,estado,tipo,localidade,alienado,serialpc,modelo,os,ram,ram_ddr,hd)
+    VALUES (v_tombamento,v_descricao,v_estado,v_tipo,v_localidade,v_alienado,v_serialpc,v_modelo,v_os,v_ram,v_ram_ddr,v_hd);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -483,4 +464,5 @@ INNER JOIN predio           AS pr ON an.predio          = pr.id;
 GROUP BY bf.tipo
 ORDER BY COUNT(bf.tipo) DESC;
 */
+
 

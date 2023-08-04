@@ -4,7 +4,7 @@ CREATE SCHEMA sgpcdatabase
 SET SCHEMA 'sgpcdatabase';
 
 
--- gerencia de pessoal: funcionario e bolsista
+-- gerencia de pessoal: funcionario e bolsista test
 
 CREATE TABLE tipo_bolsista(
 	id	 		SMALLSERIAL,

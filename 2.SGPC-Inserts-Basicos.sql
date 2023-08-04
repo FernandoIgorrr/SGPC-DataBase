@@ -1,5 +1,14 @@
-            /*      INSERTS PARA ALGUNS DADOS PRE-ESTABELECIDOS       */
+          /* ALTER TABLES FOR INCREMENTS */
 SET SCHEMA 'sgpcdatabase';
+          
+ALTER SEQUENCE tipo_usuario_id_seq      RESTART WITH 1100;
+ALTER SEQUENCE tipo_patrimonio_id_seq   RESTART WITH 2200;
+ALTER SEQUENCE tipo_bolsista_id_seq     RESTART WITH 3300;
+ALTER SEQUENCE os_pc_id_seq             RESTART WITH 100;
+ALTER SEQUENCE modelo_pc_id_seq         RESTART WITH 200;
+ALTER SEQUENCE patrimonio_id_seq        RESTART WITH 1;         
+
+/*      INSERTS PARA ALGUNS DADOS PRE-ESTABELECIDOS       */
 
 INSERT INTO tipo_bolsista (descricao) VALUES
 ('Gerência'),
@@ -34,21 +43,23 @@ INSERT INTO modelo_pc (modelo) VALUES
 ('DELL Opitplex 7050'),
 ('DELL Opitplex 3070 micro');
 
-INSERT INTO ram_pc (ram) VALUES
+INSERT INTO ram_pc (id,ram) VALUES
 (1,'1 GB'),
 (2,'2 GB'),
 (3,'3 GB'),
 (4,'4 GB'),
 (6,'6 GB'),
 (8,'8 GB'),
-(12,'12 GB');
+(12,'12 GB'),
+(16,'16 GB'),
+(20,'20 GB');
 
-INSERT INTO ram_ddr_pc (ddr) VALUES
+INSERT INTO ram_ddr_pc (id,ddr) VALUES
 (2,'ddr2'),
 (3,'ddr3'),
 (4,'ddr4');
 
-INSERT INTO hd_pc (hd) VALUES
+INSERT INTO hd_pc (id,hd) VALUES
 (250,'250 GB'),
 (500,'500 GB'),
 (1,'1 TB'),
@@ -76,13 +87,14 @@ INSERT INTO Tipo_Patrimonio (descricao) VALUES
 ('Armário'),
 ('Guarda-roupa'),
 ('Galão de água');
+
 		/*		CHAMADOS		*/
 
-INSERT INTO tipo_chamado (descricao) VALUES
+INSERT INTO tipo_chamado (id,descricao) VALUES
 (11,'Informátca'),
 (22,'Geral');
 
-INSERT INTO estado_chamado (descricao) VALUES
+INSERT INTO estado_chamado (id,descricao) VALUES
 (0,'Aberto'),
 (2,'Andamento'),
 (3,'Aguardo'),

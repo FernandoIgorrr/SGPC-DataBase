@@ -181,11 +181,11 @@ CREATE TABLE historico_patrimonio(
 
 CREATE TABLE manejo(
     id                  SERIAL   	NOT NULL,
-    patrimonio          SMALLINT    NOT NULL,
+    patrimonio          INT		    NOT NULL,
     bolsista            VARCHAR(12) NOT NULL,
     comodo_anterior     SMALLINT    NOT NULL,
     comodo_posterior    SMALLINT    NOT NULL,
-    data_manejo         DATE        NOT NULL,
+    data_manejo         DATE        NOT NULL DEFAULT CURRENT_DATE,
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)	    REFERENCES patrimonio(id),

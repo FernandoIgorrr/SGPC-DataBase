@@ -102,7 +102,7 @@ CREATE TABLE comodo(
 -- gerencia de patrimonio
 
 CREATE TABLE patrimonio(
-	id			SERIAL,
+	id			SERIAL	NOT NULL UNIQUE,
     tombamento	VARCHAR(12) UNIQUE,
     descricao	VARCHAR(50)	NOT NULL,
     estado		VARCHAR(30)	NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE patrimonio(
     alienado    boolean		NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (tipo) 			REFERENCES Tipo_Patrimonio (id),
+    FOREIGN KEY (tipo) 			REFERENCES tipo_patrimonio(id),
     FOREIGN KEY (localidade)	REFERENCES comodo(id)
 );
 
@@ -151,6 +151,7 @@ CREATE TABlE hd_pc(
 );
 
 CREATE TABLE patrimonio_pc(
+	id			INTEGER		NOT NULL UNIQUE,
     serialpc    VARCHAR 	UNIQUE,
     modelo		SMALLINT,
     os			SMALLINT,
@@ -158,16 +159,18 @@ CREATE TABLE patrimonio_pc(
     ram_ddr		SMALLINT	NOT NULL,
     hd			SMALLINT	NOT NULL,
 
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) 		REFERENCES patrimonio(id),
 	FOREIGN KEY (modelo)    REFERENCES modelo_pc(id),
     FOREIGN KEY (os)        REFERENCES os_pc(id),
     FOREIGN KEY (ram)       REFERENCES ram_pc(id),
     FOREIGN KEY (ram_ddr)   REFERENCES ram_ddr_pc(id),
 	FOREIGN KEY (hd)        REFERENCES hd_pc(id)
-)INHERITS(patrimonio);
+);
 
 CREATE TABLE historico_patrimonio(
     id              SERIAL   	NOT NULL,
-    patrimonio      SMALLINT    NOT NULL,
+    patrimonio     SMALLINT    NOT NULL,
     comodo          SMALLINT    NOT NULL,
     bolsista        VARCHAR(12) NOT NULL,
     data_chegada    DATE        NOT NULL DEFAULT CURRENT_DATE,
@@ -181,7 +184,7 @@ CREATE TABLE historico_patrimonio(
 
 CREATE TABLE manejo(
     id                  SERIAL   	NOT NULL,
-    patrimonio          INT		    NOT NULL,
+    patrimonio	        INTEGER	    NOT NULL,
     bolsista            VARCHAR(12) NOT NULL,
     comodo_anterior     SMALLINT    NOT NULL,
     comodo_posterior    SMALLINT    NOT NULL,

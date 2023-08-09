@@ -52,7 +52,24 @@ CREATE INDEX predio_responsabilidade ON responsabilidade USING
 HASH (predio);
 
            /*  FUNÇÕES E TRIGGGERS */
+						/* FUNÇÃO PARA INSERÇÃO DE PATRIMONIOS NO HISTÓRICO PELA PRIMEIRA VEZ*/
+CREATE OR REPLACE FUNCTION inserir_no_historico()
+RETURN TRIGGER AS $$
+DECLARE 
+BEGIN
+	INSERT INTO historico_patrimonio (patrimonio,comodo)
+	VALUES (NEW.patrimonio,NEW.localidade);
+END;
+$$ LANGUAGE plpgsql;	
 
+
+CREATE OR REPLACE TRIGGER t_inserir_no_historico
+AFTER INSERT ON patrimonio
+FOR EACH ROW 
+EXECUTE PROCEDURE inserir_no_historico();
+
+
+			/* FUNÇÃO PARA INSERÇÃO DE PC*/
 CREATE OR REPLACE FUNCTION inserir_pc(v_tombamento 	VARCHAR(12),
                                       v_descricao 	VARCHAR(50),
                                       v_estado 		VARCHAR(30),
@@ -66,53 +83,16 @@ CREATE OR REPLACE FUNCTION inserir_pc(v_tombamento 	VARCHAR(12),
                                       v_hd 			SMALLINT)
 RETURNS VOID AS $$
 DECLARE
-    v_tipo smallint := 2205;
+    v_tipo	SMALLINT  := 2205;
+	v_id	INTEGER;
 BEGIN 
-	INSERT INTO patrimonio_pc (tombamento,descricao,estado,tipo,localidade,alienado,serialpc,modelo,os,ram,ram_ddr,hd)
-    VALUES (v_tombamento,v_descricao,v_estado,v_tipo,v_localidade,v_alienado,v_serialpc,v_modelo,v_os,v_ram,v_ram_ddr,v_hd);
+	INSERT INTO patrimonio (tombamento,descricao,estado,tipo,localidade,alienado)
+    VALUES (v_tombamento,v_descricao,v_estado,v_tipo,v_localidade,v_alienado)RETURNING id INTO v_id;
+ 	
+   INSERT INTO patrimonio_pc (id,serialpc,modelo,os,ram,ram_ddr,hd)
+   VALUES (v_id,v_serialpc,v_modelo,v_os,v_ram,v_ram_ddr,v_hd);
 END;
 $$ LANGUAGE plpgsql;
-
-            /*      FUNÇÃO PARA TRIGGER DO MANJEMENTO DE PATRIMÔNIO     */
-
-CREATE OR REPLACE FUNCTION manejo_patrimonio()
-RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-    INSERT INTO historico_patrimonio (patrimonio,comodo,bolsista,data_chegada)
-    VALUES (NEW.patrimonio,NEW.comodo_posterior,NEW.bolsista,NEW.data_manejo);
-    
-   	UPDATE patrimonio SET localidade = NEW.comodo_posterior WHERE id = NEW.patrimonio;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE TRIGGER t_manejo_patrimonio
-AFTER INSERT ON manejo
-FOR EACH ROW
-EXECUTE PROCEDURE manejo_patrimonio();
-
-            /*      FUNÇÃO PARA TRIGGER PARA DATA DE SAÍDA DO MANJEMENTO DE PATRIMÔNIO     */
-
-
-CREATE OR REPLACE FUNCTION update_data_saida_manejo()
-RETURNS TRIGGER AS $$
-DECLARE
-	v_id INT;
-BEGIN 
-	SELECT id FROM historico_patrimonio WHERE patrimonio = NEW.patrimonio AND data_saida = NULL INTO v_id;
-	IF v_id > 0 THEN
-		UPDATE historico_patrimonio SET data_saida = NEW.data_chegada WHERE id = v_id;
-	ELSE
-	END IF;
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE TRIGGER t_update_data_saida_manejo
-BEFORE INSERT ON historico_patrimonio
-FOR EACH ROW 
-EXECUTE PROCEDURE update_data_saida_manejo();
 
 			/*				FUNÇÃO PARA FAZER O MANEJO AUTOMÁTICO (TODAS AS OUTRAS TABELAS 
 			 * 				SERÃO ATUALIZADAS AUTOMATICAMENTE DE ACORDO COM AS TRIGGERS ANTERIORES)*/
@@ -129,6 +109,45 @@ BEGIN
 	VALUES (v_patrimonio,v_bolsista,v_comodo_anterior,v_comodo); 
 END;
 $$ LANGUAGE plpgsql;
+
+
+            /*      FUNÇÃO PARA TRIGGER DO MANJEMENTO DE PATRIMÔNIO     */
+
+CREATE OR REPLACE FUNCTION manejo_patrimonio()
+RETURNS TRIGGER AS $$
+DECLARE
+BEGIN	
+    INSERT INTO historico_patrimonio (patrimonio,comodo,bolsista,data_chegada)
+    VALUES (NEW.patrimonio,NEW.comodo_posterior,NEW.bolsista,NEW.data_manejo);
+    
+   	UPDATE patrimonio SET localidade = NEW.comodo_posterior WHERE id = NEW.patrimonio;
+   
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+            /*      FUNÇÃO PARA TRIGGER PARA DATA DE SAÍDA DO MANJEMENTO DE PATRIMÔNIO     */
+
+CREATE OR REPLACE FUNCTION update_data_saida_manejo()
+RETURNS TRIGGER AS $$
+DECLARE
+	v_id INT;
+BEGIN 
+	SELECT id FROM historico_patrimonio WHERE patrimonio = NEW.patrimonio AND data_saida IS NULL INTO v_id;
+	IF v_id > 0 THEN
+		UPDATE historico_patrimonio SET data_saida = NEW.data_chegada WHERE id = v_id;
+	ELSE
+		
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER t_update_data_saida_manejo
+BEFORE INSERT ON historico_patrimonio
+FOR EACH ROW 
+EXECUTE PROCEDURE update_data_saida_manejo();
+
 
 
             /*      VALIDAÇÃO PARA INSERIR BOLSISTA     */
@@ -479,12 +498,7 @@ INNER JOIN comodo           AS co ON ma.comodo_anterior = co.id
 INNER JOIN andar            AS an ON co.andar           = an.id
 INNER JOIN predio           AS pr ON an.predio          = pr.id;  
 
-
-    
-
 /*SELECT bf.tipo, COUNT(bf.tipo) AS quantidade FROM bolsistas_completo AS bf
 GROUP BY bf.tipo
 ORDER BY COUNT(bf.tipo) DESC;
 */
-
-

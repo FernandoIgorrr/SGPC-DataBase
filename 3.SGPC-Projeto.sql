@@ -1,6 +1,6 @@
                     /*       ÍNDICES         */
 SET SCHEMA 'sgpcdatabase';
-                    
+
 CREATE INDEX id_patrimonio_idx ON patrimonio USING
 btree (id);           
                
@@ -54,11 +54,11 @@ HASH (predio);
            /*  FUNÇÕES E TRIGGGERS */
 						/* FUNÇÃO PARA INSERÇÃO DE PATRIMONIOS NO HISTÓRICO PELA PRIMEIRA VEZ*/
 CREATE OR REPLACE FUNCTION inserir_no_historico()
-RETURN TRIGGER AS $$
+RETURNS TRIGGER AS $$
 DECLARE 
 BEGIN
 	INSERT INTO historico_patrimonio (patrimonio,comodo)
-	VALUES (NEW.patrimonio,NEW.localidade);
+	VALUES (NEW.id,NEW.localidade);
 END;
 $$ LANGUAGE plpgsql;	
 
@@ -87,10 +87,10 @@ DECLARE
 	v_id	INTEGER;
 BEGIN 
 	INSERT INTO patrimonio (tombamento,descricao,estado,tipo,localidade,alienado)
-    VALUES (v_tombamento,v_descricao,v_estado,v_tipo,v_localidade,v_alienado)RETURNING id INTO v_id;
+   	VALUES (v_tombamento,v_descricao,v_estado,v_tipo,v_localidade,v_alienado) RETURNING id INTO v_id;
  	
-   INSERT INTO patrimonio_pc (id,serialpc,modelo,os,ram,ram_ddr,hd)
-   VALUES (v_id,v_serialpc,v_modelo,v_os,v_ram,v_ram_ddr,v_hd);
+	INSERT INTO patrimonio_pc (id,serialpc,modelo,os,ram,ram_ddr,hd)
+	VALUES (v_id,v_serialpc,v_modelo,v_os,v_ram,v_ram_ddr,v_hd);
 END;
 $$ LANGUAGE plpgsql;
 

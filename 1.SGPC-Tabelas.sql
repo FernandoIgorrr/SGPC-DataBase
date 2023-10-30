@@ -37,13 +37,12 @@ CREATE TABLE usuario(
 	usuario			VARCHAR(25)		NOT NULL,
 	senha			VARCHAR(40)		NOT NULL,
     nome			VARCHAR(100)	NOT NULL,
-    email       	VARCHAR(30),
+    email       	VARCHAR(50),
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
 	tipo_usuario	SMALLINT 		NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
-
 
 	PRIMARY KEY (usuario),
 	FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
@@ -101,13 +100,13 @@ CREATE TABLE comodo(
 -- gerencia de patrimonio
 
 CREATE TABLE patrimonio(
-	id			SERIAL	NOT NULL UNIQUE,
+	id			SERIAL	    NOT NULL UNIQUE,
     tombamento	VARCHAR(12) UNIQUE,
-    descricao	VARCHAR(50)	NOT NULL,
+    descricao	TEXT	    NOT NULL,
     estado		VARCHAR(30)	NOT NULL,
     tipo		SMALLINT	NOT NULL,
     localidade	SMALLINT	NOT NULL,
-    alienado    boolean		NOT NULL,
+    alienado    BOOLEAN		NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (tipo) 			REFERENCES tipo_patrimonio(id),
@@ -169,9 +168,9 @@ CREATE TABLE patrimonio_pc(
 
 CREATE TABLE historico_patrimonio(
     id              SERIAL   	NOT NULL,
-    patrimonio     SMALLINT    NOT NULL,
+    patrimonio      SMALLINT    NOT NULL,
     comodo          SMALLINT    NOT NULL,
-    bolsista        VARCHAR(12) NOT NULL,
+    bolsista        VARCHAR(12) ,
     data_chegada    DATE        NOT NULL DEFAULT CURRENT_DATE,
     data_saida      DATE,
 
@@ -237,6 +236,7 @@ CREATE TABLE chamado(
 	FOREIGN KEY (criador)		REFERENCES usuario(usuario),
 	FOREIGN KEY (fechador)		REFERENCES usuario(usuario),
 	FOREIGN KEY (localidade)	REFERENCES comodo(id),
+    FOREIGN KEY (estado)        REFERENCES estado_chamado(id),
 	FOREIGN KEY (tipo)			REFERENCES tipo_chamado(id)
 );
 
@@ -252,7 +252,7 @@ CREATE TABLE chamado_bolsista(
 	id_chamado			INTEGER		NOT NULL,
 	matricula_bolsista 	VARCHAR(12) NOT NULL,
 	
-	FOREIGN KEY (id_chamado)		REFERENCES chamado(id),
+	FOREIGN KEY (id_chamado)		    REFERENCES chamado(id),
 	FOREIGN KEY (matricula_bolsista)	REFERENCES bolsista(matricula)
 );
 
@@ -281,4 +281,24 @@ CREATE TABLE chamado_historico(
 	FOREIGN KEY (estado_anterior)	REFERENCES estado_chamado(id),
 	FOREIGN KEY (estado_atual)		REFERENCES estado_chamado(id),
 	FOREIGN KEY (usuario)			REFERENCES usuario(usuario)
+);
+
+CREATE TABLE estado_tarefa(
+	id 			SMALLINT	NOT NULL,
+	descricao	TEXT		NOT NULL,
+
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE tarefa(
+    id                  SERIAL          NOT NULL,
+    atribuidor			VARCHAR(25)		NOT NULL,
+	atribuido			VARCHAR(25)		NOT NULL,
+    descricao           TEXT            NOT NULL,
+    estado              SMALLINT        NOT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (atribuidor)    REFERENCES funcionario(usuario),
+    FOREIGN KEY (atribuido)     REFERENCES bolsista(usuario),
+    FOREIGN KEY (estado)        REFERENCES estado_tarefa(id)
 );

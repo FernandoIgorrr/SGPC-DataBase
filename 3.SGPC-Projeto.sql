@@ -52,21 +52,7 @@ CREATE INDEX predio_responsabilidade ON responsabilidade USING
 HASH (predio);
 
            /*  FUNÇÕES E TRIGGGERS */
-						/* FUNÇÃO PARA INSERÇÃO DE PATRIMONIOS NO HISTÓRICO PELA PRIMEIRA VEZ*/
-CREATE OR REPLACE FUNCTION inserir_no_historico()
-RETURNS TRIGGER AS $$
-DECLARE 
-BEGIN
-	INSERT INTO historico_patrimonio (patrimonio,comodo)
-	VALUES (NEW.id,NEW.localidade);
-END;
-$$ LANGUAGE plpgsql;	
 
-
-CREATE OR REPLACE TRIGGER t_inserir_no_historico
-AFTER INSERT ON patrimonio
-FOR EACH ROW 
-EXECUTE PROCEDURE inserir_no_historico();
 
 
 			/* FUNÇÃO PARA INSERÇÃO DE PC*/
@@ -147,6 +133,23 @@ CREATE OR REPLACE TRIGGER t_update_data_saida_manejo
 BEFORE INSERT ON historico_patrimonio
 FOR EACH ROW 
 EXECUTE PROCEDURE update_data_saida_manejo();
+
+
+						/* FUNÇÃO PARA INSERÇÃO DE PATRIMONIOS NO HISTÓRICO PELA PRIMEIRA VEZ*/
+CREATE OR REPLACE FUNCTION inserir_no_historico()
+RETURNS TRIGGER AS $$
+DECLARE 
+BEGIN
+	INSERT INTO historico_patrimonio (patrimonio,comodo)
+	VALUES (NEW.id,NEW.localidade);
+END;
+$$ LANGUAGE plpgsql;	
+
+
+CREATE OR REPLACE TRIGGER t_inserir_no_historico
+AFTER INSERT ON patrimonio
+FOR EACH ROW 
+EXECUTE PROCEDURE inserir_no_historico();
 
 
 

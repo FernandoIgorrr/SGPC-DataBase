@@ -16,7 +16,7 @@ btree (patrimonio);
 CREATE INDEX data_chegada_historico_patrimonio ON historico_patrimonio USING
 btree (data_chegada);
 
-CREATE INDEX nome_bolsista ON bolsista USING
+CREATE INDEX nome_usuario ON usuario USING
 HASH (nome);
 
 CREATE INDEX id_manejo ON manejo USING
@@ -52,7 +52,8 @@ CREATE INDEX predio_responsabilidade ON responsabilidade USING
 HASH (predio);
 
            /*  FUNÇÕES E TRIGGGERS */
-CREATE OR REPLACE FUNCTION inserir_bolsista()
+CREATE OR REPLACE FUNCTION inserir_bolsista(v_usuario VARCHAR(25),
+                                            v_senha)
 RETURNS VOID AS $$
 DECLARE
 

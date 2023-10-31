@@ -34,38 +34,38 @@ CREATE TABLE tipo_supervisor(
 );
 
 CREATE TABLE usuario(
-	usuario			VARCHAR(25)		NOT NULL,
+    id              SMALLINT        NOT NULL,
+	usuario			VARCHAR(25)		UNIQUE NOT NULL,
 	senha			VARCHAR(40)		NOT NULL,
     nome			VARCHAR(100)	NOT NULL,
-    matricula	    VARCHAR(12) UNIQUE,
     email       	VARCHAR(50),
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
-	tipo	        SMALLINT 		NOT NULL,
-	nivel       	SMALLINT 		NOT NULL,
+	nivel_de_acesso	SMALLINT 		NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
 
-	PRIMARY KEY (usuario),
-	FOREIGN KEY (nivel) REFERENCES nivel_usuario(id)
+
+	PRIMARY KEY (id),
+	FOREIGN KEY (nivel_de_acesso) REFERENCES nivel_usuario(id)
 );
 
 CREATE TABLE bolsista(
-    matricula       VARCHAR(12) UNIQUE,
-    usuario         VARCHAR(25),
+    matricula       VARCHAR(12),
+    usuario         SMALLINT,
     tipo_bolsista   SMALLINT,
 
     PRIMARY KEY (matricula),
-    FOREIGN KEY (usuario) REFERENCES usuario(usuario),
+    FOREIGN KEY (usuario)       REFERENCES usuario(id),
     FOREIGN KEY (tipo_bolsista) REFERENCES tipo_bolsista(id)
 );
 
 CREATE TABLE supervisor(
-    usuario         VARCHAR(25),
+    usuario         SMALLINT,
     tipo_supervisor   SMALLINT,
 
     PRIMARY KEY (usuario),
-    FOREIGN KEY (usuario) REFERENCES usuario(usuario),
+    FOREIGN KEY (usuario)       REFERENCES usuario(id),
     FOREIGN KEY (tipo_supervisor) REFERENCES tipo_supervisor(id)
 );
 
@@ -191,14 +191,14 @@ CREATE TABLE historico_patrimonio(
 CREATE TABLE manejo(
     id                  SERIAL   	NOT NULL,
     patrimonio	        INTEGER	    NOT NULL,
-    bolsista            VARCHAR(12) NOT NULL,
+    usuario             VARCHAR(25) NOT NULL,
     comodo_anterior     SMALLINT    NOT NULL,
     comodo_posterior    SMALLINT    NOT NULL,
     data_manejo         DATE        NOT NULL DEFAULT CURRENT_DATE,
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)	    REFERENCES patrimonio(id),
-    FOREIGN KEY (bolsista)	        REFERENCES usuario(usuario),
+    FOREIGN KEY (usuario)	        REFERENCES usuario(usuario),
     FOREIGN KEY (comodo_anterior)	REFERENCES comodo(id),
     FOREIGN KEY (comodo_posterior)	REFERENCES comodo(id)
 );
@@ -207,7 +207,7 @@ CREATE TABLE responsabilidade(
     bolsista	VARCHAR(12),
     predio		SMALLINT,
 
-    FOREIGN KEY (bolsista)   REFERENCES usuario(usuario),
+    FOREIGN KEY (bolsista)   REFERENCES bolsista(matricula),
     FOREIGN KEY (predio)     REFERENCES predio(id)
 );
 
@@ -301,9 +301,9 @@ CREATE TABLE estado_tarefa(
 );
 
 CREATE TABLE tarefa(
-    id                  SERIAL          NOT NULL,
-    atribuidor			VARCHAR(25)		NOT NULL,
-	atribuido			VARCHAR(25)		NOT NULL,
+    id                  SMALLINT          NOT NULL,
+    atribuidor			SMALLINT		NOT NULL,
+	atribuido			SMALLINT	NOT NULL,
     descricao           TEXT            NOT NULL,
     prazo               SMALLINT,
     data_abertura	    TIMESTAMP 	    NOT NULL DEFAULT NOW(),

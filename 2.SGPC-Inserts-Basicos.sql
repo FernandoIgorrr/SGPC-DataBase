@@ -1,7 +1,8 @@
           /* ALTER TABLES FOR INCREMENTS */
 SET SCHEMA 'sgpcdatabase';
-          
-ALTER SEQUENCE tipo_usuario_id_seq      RESTART WITH 1100;
+
+ALTER SEQUENCE usuario_id_seq           RESTART WITH 666;
+ALTER SEQUENCE nivel_usuario_id_seq     RESTART WITH 1100;
 ALTER SEQUENCE tipo_patrimonio_id_seq   RESTART WITH 2200;
 ALTER SEQUENCE tipo_bolsista_id_seq     RESTART WITH 3300;
 ALTER SEQUENCE os_pc_id_seq             RESTART WITH 100;
@@ -21,14 +22,17 @@ INSERT INTO nivel_usuario (descricao) VALUES
 ('Comum');
 
 INSERT INTO tipo_supervisor (descricao) VALUES
-('Supervisor'),
+('Operador'),
 ('Chefe');
 
 INSERT INTO os_pc (nome) VALUES
 ('Windows-10'),
 ('Windows-11'),
 ('Debain'),
+('Fedora'),
 ('Ubuntu'),
+('Pop-OS'),
+('Elementary-OS'),
 ('Mint'),
 ('Arch-Linux'),
 ('Open-BSD'),
@@ -67,7 +71,7 @@ INSERT INTO hd_pc (id,hd) VALUES
 (1,'1 TB'),
 (2,'2 TB');
 
-INSERT INTO Tipo_Patrimonio (descricao) VALUES
+INSERT INTO tipo_patrimonio (descricao) VALUES
 ('Cadeira'),
 ('Mesa'),
 ('Geladeira'),

@@ -52,8 +52,14 @@ CREATE INDEX predio_responsabilidade ON responsabilidade USING
 HASH (predio);
 
            /*  FUNÇÕES E TRIGGGERS */
+CREATE OR REPLACE FUNCTION inserir_bolsista()
+RETURNS VOID AS $$
+DECLARE
 
+BEGIN
 
+END;
+$$ LANGUAGE plpgsql;
 
 			/* FUNÇÃO PARA INSERÇÃO DE PC*/
 CREATE OR REPLACE FUNCTION inserir_pc(v_tombamento 	VARCHAR(12),

@@ -19,14 +19,14 @@ CREATE TABLE tipo_patrimonio(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE tipo_usuario(
+CREATE TABLE nivel_usuario(
 	id	 		SMALLSERIAL,
     descricao	VARCHAR(20),
 
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE tipo_funcionario(
+CREATE TABLE tipo_supervisor(
 	id			SMALLSERIAL,
 	descricao	VARCHAR(20),
 
@@ -37,29 +37,37 @@ CREATE TABLE usuario(
 	usuario			VARCHAR(25)		NOT NULL,
 	senha			VARCHAR(40)		NOT NULL,
     nome			VARCHAR(100)	NOT NULL,
+    matricula	    VARCHAR(12) UNIQUE,
     email       	VARCHAR(50),
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
-	tipo_usuario	SMALLINT 		NOT NULL,
+	tipo	        SMALLINT 		NOT NULL,
+	nivel       	SMALLINT 		NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
 
 	PRIMARY KEY (usuario),
-	FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
+	FOREIGN KEY (nivel) REFERENCES nivel_usuario(id)
 );
 
-CREATE TABLE funcionario(
-	tipo		SMALLINT,
-
-	FOREIGN KEY (tipo) REFERENCES tipo_funcionario(id)
-)INHERITS(usuario);
-
 CREATE TABLE bolsista(
-	matricula	VARCHAR(12) UNIQUE,
-	tipo		SMALLINT,
+    matricula       VARCHAR(12) UNIQUE,
+    usuario         VARCHAR(25),
+    tipo_bolsista   SMALLINT,
 
-	FOREIGN KEY (tipo) REFERENCES tipo_bolsista(id)
-)INHERITS(usuario);
+    PRIMARY KEY (matricula),
+    FOREIGN KEY (usuario) REFERENCES usuario(usuario),
+    FOREIGN KEY (tipo_bolsista) REFERENCES tipo_bolsista(id)
+);
+
+CREATE TABLE supervisor(
+    usuario         VARCHAR(25),
+    tipo_supervisor   SMALLINT,
+
+    PRIMARY KEY (usuario),
+    FOREIGN KEY (usuario) REFERENCES usuario(usuario),
+    FOREIGN KEY (tipo_supervisor) REFERENCES tipo_supervisor(id)
+);
 
 -- gerencia dos predios
 
@@ -176,7 +184,7 @@ CREATE TABLE historico_patrimonio(
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)    REFERENCES patrimonio(id),
-    FOREIGN KEY (bolsista)	    REFERENCES bolsista(matricula),
+    FOREIGN KEY (bolsista)	    REFERENCES usuario(usuario),
     FOREIGN KEY (comodo)        REFERENCES comodo(id)
 );
 
@@ -190,7 +198,7 @@ CREATE TABLE manejo(
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)	    REFERENCES patrimonio(id),
-    FOREIGN KEY (bolsista)	        REFERENCES bolsista(matricula),
+    FOREIGN KEY (bolsista)	        REFERENCES usuario(usuario),
     FOREIGN KEY (comodo_anterior)	REFERENCES comodo(id),
     FOREIGN KEY (comodo_posterior)	REFERENCES comodo(id)
 );
@@ -199,7 +207,7 @@ CREATE TABLE responsabilidade(
     bolsista	VARCHAR(12),
     predio		SMALLINT,
 
-    FOREIGN KEY (bolsista)   REFERENCES bolsista(matricula),
+    FOREIGN KEY (bolsista)   REFERENCES usuario(usuario),
     FOREIGN KEY (predio)     REFERENCES predio(id)
 );
 
@@ -249,11 +257,11 @@ CREATE TABLE chamado_patrimonio(
 );
 
 CREATE TABLE chamado_bolsista(
-	id_chamado			INTEGER		NOT NULL,
-	matricula_bolsista 	VARCHAR(12) NOT NULL,
+	id_chamado	INTEGER		NOT NULL,
+	usuario 	VARCHAR(25) NOT NULL,
 	
 	FOREIGN KEY (id_chamado)		    REFERENCES chamado(id),
-	FOREIGN KEY (matricula_bolsista)	REFERENCES bolsista(matricula)
+	FOREIGN KEY (usuario)	REFERENCES usuario(usuario)
 );
 
 CREATE TABLE chamado_comentario(
@@ -283,6 +291,8 @@ CREATE TABLE chamado_historico(
 	FOREIGN KEY (usuario)			REFERENCES usuario(usuario)
 );
 
+--Tarefas
+
 CREATE TABLE estado_tarefa(
 	id 			SMALLINT	NOT NULL,
 	descricao	TEXT		NOT NULL,
@@ -295,10 +305,14 @@ CREATE TABLE tarefa(
     atribuidor			VARCHAR(25)		NOT NULL,
 	atribuido			VARCHAR(25)		NOT NULL,
     descricao           TEXT            NOT NULL,
+    prazo               SMALLINT,
+    data_abertura	    TIMESTAMP 	    NOT NULL DEFAULT NOW(),
+	data_fechamento	    TIMESTAMP       NOT NULL,
     estado              SMALLINT        NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (atribuidor)    REFERENCES funcionario(usuario),
-    FOREIGN KEY (atribuido)     REFERENCES bolsista(usuario),
+    FOREIGN KEY (atribuidor)    REFERENCES usuario(usuario),
+    FOREIGN KEY (atribuido)     REFERENCES usuario(usuario),
     FOREIGN KEY (estado)        REFERENCES estado_tarefa(id)
 );
+

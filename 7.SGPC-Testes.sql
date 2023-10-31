@@ -15,7 +15,21 @@ VALUES ('201111112','asdasdsa','sadsgfdgh',2202,50,false);
 INSERT INTO bolsista (usuario,senha,nome,email,telefone,ativo,tipo_usuario,data_chegada,matricula,tipo)
 VALUES ('figordantas','12345','Fernando Igor Dantas','FernandoIgor.Dantas@gmail.com','66666666',TRUE,1101,'2023-08-08','20170146005',3303);
 
+INSERT INTO funcionario (usuario,senha,nome,email,telefone,ativo,tipo_usuario,data_chegada,tipo)
+VALUES ('daenerys','12345',' Daenerys da silva sauro','Daeneryys.Dantas@gmail.com','66666666',TRUE,1101,'2023-08-08',1);
+
+INSERT INTO funcionario (usuario,senha,nome,email,telefone,ativo,tipo_usuario,data_chegada,tipo)
+VALUES ('daenerys','12345',' Daenerys da silva sauro','Daeneryys.Dantas@gmail.com','66666666',TRUE,1101,'2023-08-08',1);
+
+INSERT INTO usuario (usuario,senha,nome,email,telefone,ativo,tipo_usuario,data_chegada)
+VALUES ('daenerys','12345',' Daenerys da silva sauro','Daeneryys.Dantas@gmail.com','66666666',TRUE,1101,'2023-08-08');
+
+
+
 select * from tipo_usuario
+select * from tipo_funcionario
+select *  from ONLY usuario
+select *  from funcionario
 select * from tipo_bolsista
 select * from modelo_pc
 select * from tipo_patrimonio tp 

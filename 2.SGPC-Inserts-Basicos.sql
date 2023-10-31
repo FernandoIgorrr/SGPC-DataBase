@@ -16,11 +16,13 @@ INSERT INTO tipo_bolsista (descricao) VALUES
 ('Avaliação'),
 ('Informática');
 
-INSERT INTO tipo_usuario (descricao) VALUES
-('Zero'),
-('Master'),
-('Chefe'),
+INSERT INTO nivel_usuario (descricao) VALUES
+('Admnistrador'),
 ('Comum');
+
+INSERT INTO tipo_supervisor (descricao) VALUES
+('Supervisor'),
+('Chefe');
 
 INSERT INTO os_pc (nome) VALUES
 ('Windows-10'),

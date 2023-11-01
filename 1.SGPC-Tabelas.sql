@@ -5,6 +5,13 @@ SET SCHEMA 'sgpcdatabase';
 
 -- gerencia de pessoal: funcionario e bolsista test
 
+CREATE TABLE tipo_usuario(
+	id	 		SMALLSERIAL,
+    descricao	VARCHAR(20),
+
+	PRIMARY KEY (id)
+);
+
 CREATE TABLE tipo_bolsista(
 	id	 		SMALLSERIAL,
     descricao	VARCHAR(20),
@@ -42,11 +49,13 @@ CREATE TABLE usuario(
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
 	nivel_acesso	SMALLINT 		NOT NULL,
+    tipo_usuario    SMALLINT        NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
 
 	PRIMARY KEY (id),
-	FOREIGN KEY (nivel_acesso) REFERENCES nivel_acesso(id)
+	FOREIGN KEY (nivel_acesso) REFERENCES nivel_acesso(id),
+	FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
 );
 
 CREATE TABLE bolsista(

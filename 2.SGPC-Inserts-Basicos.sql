@@ -11,6 +11,10 @@ ALTER SEQUENCE patrimonio_id_seq        RESTART WITH 1;
 
 /*      INSERTS PARA ALGUNS DADOS PRE-ESTABELECIDOS       */
 
+INSERT INTO tipo_usuario (descricao) VALUES
+('Bolsista'),
+('Surpevisor');
+
 INSERT INTO tipo_bolsista (descricao) VALUES
 ('Gerência'),
 ('Design'),

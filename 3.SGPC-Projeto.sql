@@ -52,15 +52,58 @@ CREATE INDEX predio_responsabilidade ON responsabilidade USING
 HASH (predio);
 
            /*  FUNÇÕES E TRIGGGERS */
-CREATE OR REPLACE FUNCTION inserir_bolsista(v_usuario VARCHAR(25),
-                                            v_senha)
+
+        /* FUNÇÃO PARA INSERIR O USUÁRIO DO TIPO BOLSISTA */
+CREATE OR REPLACE FUNCTION inserir_bolsista(
+                                            v_matricula         VARCHAR(12),
+                                            v_login             VARCHAR(25),
+                                            v_senha             VARCHAR(80),
+                                            v_nome  	        VARCHAR(100),
+                                            v_email       	    VARCHAR(50),
+                                            v_telefone    	    VARCHAR(12),
+	                                        v_ativo			    BOOLEAN,
+	                                        v_nivel_acesso	    SMALLINT,
+                                            v_tipo_bolsista     SMALLINT,
+	                                        v_data_chegada	    DATE)
+
 RETURNS VOID AS $$
 DECLARE
-
+    v_id	INTEGER;
 BEGIN
+    INSERT INTO usuario (login, senha, nome, email, telefone, ativo, nivel_acesso, data_chegada)
+   	VALUES (v_login, v_senha, v_nome, v_email, v_telefone, v_ativo,v_nivel_acesso, v_data_chegada) RETURNING id INTO v_id;
+
+    INSERT INTO bolsista (matricula, usuario, tipo_bolsista)
+    VALUES (v_matricula, v_id, v_tipo_bolsista);
 
 END;
 $$ LANGUAGE plpgsql;
+
+        /* FUNÇÃO PARA INSERIR O USUÁRIO DO TIPO SUPERVISOR */
+CREATE OR REPLACE FUNCTION inserir_supervisor(  v_login             VARCHAR(25),
+                                                v_senha             VARCHAR(80),
+                                                v_nome  	        VARCHAR(100),
+                                                v_email       	    VARCHAR(50),
+                                                v_telefone    	    VARCHAR(12),
+	                                            v_ativo			    BOOLEAN,
+	                                            v_nivel_acesso	    SMALLINT,
+                                                v_tipo_supervisor   SMALLINT,
+	                                            v_data_chegada	    DATE)
+
+RETURNS VOID AS $$
+DECLARE
+    v_id	INTEGER;
+BEGIN
+    INSERT INTO usuario (login, senha, nome, email, telefone, ativo, nivel_acesso, data_chegada)
+   	VALUES (v_login, v_senha, v_nome, v_email, v_telefone, v_ativo,v_nivel_acesso, v_data_chegada) RETURNING id INTO v_id;
+
+    INSERT INTO supervisor (usuario, tipo_supervisor)
+    VALUES (v_id, v_tipo_supervisor);
+
+END;
+$$ LANGUAGE plpgsql;
+
+
 
 			/* FUNÇÃO PARA INSERÇÃO DE PC*/
 CREATE OR REPLACE FUNCTION inserir_pc(v_tombamento 	VARCHAR(12),
@@ -162,26 +205,26 @@ EXECUTE PROCEDURE inserir_no_historico();
 
             /*      VALIDAÇÃO PARA INSERIR BOLSISTA     */
 
-CREATE OR REPLACE FUNCTION inserir_bolsista()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.matricula IS NULL THEN
-        RAISE EXCEPTION 'Matrícula Inválida';
-    END IF;
-    IF NEW.nome IS NULL THEN
-        RAISE EXCEPTION 'Por favor informe um nome';
-    END IF;
-    
-    INSERT INTO bolsista (nome,usuario,tipo,ativo) VALUES (NEW.nome,NEW.usuario,NEW.tipo,true);
-  
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE TRIGGER t_inserir_bolsista
-AFTER INSERT ON bolsista
-FOR EACH ROW
-EXECUTE PROCEDURE inserir_bolsista();
+-- CREATE OR REPLACE FUNCTION inserir_bolsista()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     IF NEW.matricula IS NULL THEN
+--         RAISE EXCEPTION 'Matrícula Inválida';
+--     END IF;
+--     IF NEW.nome IS NULL THEN
+--         RAISE EXCEPTION 'Por favor informe um nome';
+--     END IF;
+--
+--     INSERT INTO bolsista (nome,usuario,tipo,ativo) VALUES (NEW.nome,NEW.usuario,NEW.tipo,true);
+--
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE OR REPLACE TRIGGER t_inserir_bolsista
+-- AFTER INSERT ON bolsista
+-- FOR EACH ROW
+-- EXECUTE PROCEDURE inserir_bolsista();
 
 CREATE OR REPLACE FUNCTION inserir_patrimonio()
 RETURNS TRIGGER AS $$

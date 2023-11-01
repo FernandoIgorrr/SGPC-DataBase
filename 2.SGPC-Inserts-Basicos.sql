@@ -2,7 +2,7 @@
 SET SCHEMA 'sgpcdatabase';
 
 ALTER SEQUENCE usuario_id_seq           RESTART WITH 666;
-ALTER SEQUENCE nivel_usuario_id_seq     RESTART WITH 1100;
+/*ALTER SEQUENCE nivel_de_acesso_id_seq   RESTART WITH 1100;*/
 ALTER SEQUENCE tipo_patrimonio_id_seq   RESTART WITH 2200;
 ALTER SEQUENCE tipo_bolsista_id_seq     RESTART WITH 3300;
 ALTER SEQUENCE os_pc_id_seq             RESTART WITH 100;
@@ -17,9 +17,9 @@ INSERT INTO tipo_bolsista (descricao) VALUES
 ('Avaliação'),
 ('Informática');
 
-INSERT INTO nivel_usuario (descricao) VALUES
-('Admnistrador'),
-('Comum');
+INSERT INTO nivel_acesso (descricao) VALUES
+('Comum'),
+('Admnistrador');
 
 INSERT INTO tipo_supervisor (descricao) VALUES
 ('Operador'),
@@ -127,11 +127,29 @@ INSERT INTO predio (nome,complexo) VALUES
 ('CAMPUS II',1),
 ('CAMPUS III',1),
 ('CAMPUS IV',1);
+    /*  COMPLEXO BIOMÉDICA */
+
+INSERT INTO predio (nome,complexo) VALUES
+('CASA 4',2),
+('CASA 6',2),
+('CASA 8',2),
+('CASA 10',2),
+('CASA 12',2),
+('CASA 14',2),
+('CASA 16',2),
+('CASA 18',2),
+('CASA 20',2),
+('CASA 22',2),
+('CASA 24',2),
+('CASA 26',2),
+('CASA 28',2),
+('CASA 30',2),
+('CASA 32',2);
 
     /* OUTROS COMPLEXOS QUE SÓ TEM UM PŔEDIO */
-    
+
 INSERT INTO predio (nome,complexo) VALUES
-('CASAS DA BIOMÉDICA',2),
+
 ('PÓS-GRADUAÇÃO/POUSO',3),
 ('PRAÇA CÍVICA',4),
 ('MIPIBU',5),
@@ -165,24 +183,38 @@ INSERT INTO andar (nome,predio) VALUES
 
             /* BIOMÉDICA */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',5);
+('TÉRREO',5),
+('TÉRREO',6),
+('TÉRREO',7),
+('TÉRREO',8),
+('TÉRREO',9),
+('TÉRREO',10),
+('TÉRREO',11),
+('TÉRREO',12),
+('TÉRREO',13),
+('TÉRREO',14),
+('TÉRREO',15),
+('TÉRREO',16),
+('TÉRREO',17),
+('TÉRREO',18),
+('TÉRREO',19);
 
             /* PÓS-GRADUAÇÃO */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',6);
+('TÉRREO',20);
 
             /* PRAÇA CÍVICA */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',7);
+('TÉRREO',21);
 
             /* MIPIBU */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',8);
+('TÉRREO',22);
 
             /* PROAE */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',9),
-('PRIMEIRO ANDAR',9);
+('TÉRREO',23),
+('PRIMEIRO ANDAR',23);
 
            /* PISO I - CAMPUS I */
 INSERT INTO comodo (nome,andar) VALUES
@@ -375,20 +407,3 @@ INSERT INTO comodo (nome,andar) VALUES
 ('BANHEIRO',12);
 
             /*      BIOMÉDICA       */
-            
-INSERT INTO comodo (nome,andar) VALUES
-('CASA 4',13),
-('CASA 6',13),
-('CASA 8',13),
-('CASA 10',13),
-('CASA 12',13),
-('CASA 14',13),
-('CASA 16',13),
-('CASA 18',13),
-('CASA 20',13),
-('CASA 22',13),
-('CASA 24',13),
-('CASA 26',13),
-('CASA 28',13),
-('CASA 30',13),
-('CASA 32',13);

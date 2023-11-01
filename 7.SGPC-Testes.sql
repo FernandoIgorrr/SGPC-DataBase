@@ -1,5 +1,27 @@
 SET SCHEMA 'sgpcdatabase';
 
+select inserir_bolsista('20170146005',
+                        'F.IgorDantas',
+                        '@12345',
+                        'Fernando Igor Dantas',
+                        'Fernandoigor.dantas@outlook.com',
+                        '84997039665',
+                        true,
+                        '2',
+                        '3303',
+                        '2017-07-01');
+
+select inserir_supervisor('verinha',
+                        '@12345',
+                        'Vera Cavalcanti',
+                        'Vera.Cavalcanti@gmail.com',
+                        '84998769643',
+                        true,
+                        '1',
+                        '2',
+                        '2005-03-20');
+
+
 select inserir_pc('201501422','asdasd','asdasdads','1',false,'f3122','206','100','16','4','1');
 select inserir_pc('201501423','asdasd','asdasdads','1',false,'f3123','206','100','16','4','1');
 select inserir_pc('201501424','asdasd','asdasdads','1',false,'f3124','206','100','16','4','1');
@@ -26,10 +48,7 @@ VALUES ('daenerys','12345',' Daenerys da silva sauro','Daeneryys.Dantas@gmail.co
 
 
 
-select * from tipo_usuario
-select * from tipo_funcionario
 select *  from ONLY usuario
-select *  from funcionario
 select * from tipo_bolsista
 select * from modelo_pc
 select * from tipo_patrimonio tp 

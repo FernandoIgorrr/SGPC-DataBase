@@ -19,7 +19,7 @@ CREATE TABLE tipo_patrimonio(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE nivel_usuario(
+CREATE TABLE nivel_acesso(
 	id	 		SMALLSERIAL,
     descricao	VARCHAR(20),
 
@@ -34,25 +34,24 @@ CREATE TABLE tipo_supervisor(
 );
 
 CREATE TABLE usuario(
-    id              SMALLINT        NOT NULL,
-	usuario			VARCHAR(25)		UNIQUE NOT NULL,
-	senha			VARCHAR(40)		NOT NULL,
+    id              SERIAL          NOT NULL,
+	login			VARCHAR(25)		UNIQUE NOT NULL,
+	senha			VARCHAR(80)		NOT NULL,
     nome			VARCHAR(100)	NOT NULL,
     email       	VARCHAR(50),
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
-	nivel_de_acesso	SMALLINT 		NOT NULL,
+	nivel_acesso	SMALLINT 		NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
 
-
 	PRIMARY KEY (id),
-	FOREIGN KEY (nivel_de_acesso) REFERENCES nivel_usuario(id)
+	FOREIGN KEY (nivel_acesso) REFERENCES nivel_acesso(id)
 );
 
 CREATE TABLE bolsista(
     matricula       VARCHAR(12),
-    usuario         SMALLINT,
+    usuario         INTEGER,
     tipo_bolsista   SMALLINT,
 
     PRIMARY KEY (matricula),
@@ -61,7 +60,7 @@ CREATE TABLE bolsista(
 );
 
 CREATE TABLE supervisor(
-    usuario         SMALLINT,
+    usuario         INTEGER,
     tipo_supervisor   SMALLINT,
 
     PRIMARY KEY (usuario),
@@ -157,7 +156,7 @@ CREATE TABlE hd_pc(
 );
 
 CREATE TABLE patrimonio_pc(
-	id			INTEGER		NOT NULL UNIQUE,
+	id			SERIAL		NOT NULL,
     serialpc    VARCHAR 	UNIQUE,
     modelo		SMALLINT,
     os			SMALLINT,
@@ -166,6 +165,7 @@ CREATE TABLE patrimonio_pc(
     hd			SMALLINT	NOT NULL,
 
     PRIMARY KEY (id),
+
     FOREIGN KEY (id) 		REFERENCES patrimonio(id),
 	FOREIGN KEY (modelo)    REFERENCES modelo_pc(id),
     FOREIGN KEY (os)        REFERENCES os_pc(id),
@@ -184,7 +184,7 @@ CREATE TABLE historico_patrimonio(
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)    REFERENCES patrimonio(id),
-    FOREIGN KEY (bolsista)	    REFERENCES usuario(usuario),
+    FOREIGN KEY (bolsista)	    REFERENCES usuario(login),
     FOREIGN KEY (comodo)        REFERENCES comodo(id)
 );
 
@@ -198,7 +198,7 @@ CREATE TABLE manejo(
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)	    REFERENCES patrimonio(id),
-    FOREIGN KEY (usuario)	        REFERENCES usuario(usuario),
+    FOREIGN KEY (usuario)	        REFERENCES usuario(login),
     FOREIGN KEY (comodo_anterior)	REFERENCES comodo(id),
     FOREIGN KEY (comodo_posterior)	REFERENCES comodo(id)
 );
@@ -230,8 +230,8 @@ CREATE TABLE estado_chamado(
 
 CREATE TABLE chamado(
 	id				SERIAL	 	NOT NULL UNIQUE,
-	criador			VARCHAR(25)	NOT NULL,
-	fechador		VARCHAR(25),
+	criador			INTEGER	    NOT NULL,
+	fechador		INTEGER,
 	data_abertura	TIMESTAMP 	NOT NULL DEFAULT NOW(),
 	data_fechamento	TIMESTAMP,
 	titulo			TEXT		NOT NULL,
@@ -241,8 +241,8 @@ CREATE TABLE chamado(
 	tipo			SMALLINT 	NOT NULL,
 
 	PRIMARY KEY (id),
-	FOREIGN KEY (criador)		REFERENCES usuario(usuario),
-	FOREIGN KEY (fechador)		REFERENCES usuario(usuario),
+	FOREIGN KEY (criador)		REFERENCES usuario(id),
+	FOREIGN KEY (fechador)		REFERENCES usuario(id),
 	FOREIGN KEY (localidade)	REFERENCES comodo(id),
     FOREIGN KEY (estado)        REFERENCES estado_chamado(id),
 	FOREIGN KEY (tipo)			REFERENCES tipo_chamado(id)
@@ -258,10 +258,10 @@ CREATE TABLE chamado_patrimonio(
 
 CREATE TABLE chamado_bolsista(
 	id_chamado	INTEGER		NOT NULL,
-	usuario 	VARCHAR(25) NOT NULL,
+	bolsista 	VARCHAR(12) NOT NULL,
 	
-	FOREIGN KEY (id_chamado)		    REFERENCES chamado(id),
-	FOREIGN KEY (usuario)	REFERENCES usuario(usuario)
+	FOREIGN KEY (id_chamado)    REFERENCES chamado(id),
+	FOREIGN KEY (bolsista)	    REFERENCES bolsista(matricula)
 );
 
 CREATE TABLE chamado_comentario(
@@ -273,7 +273,7 @@ CREATE TABLE chamado_comentario(
 
 	PRIMARY KEY (id),
 	FOREIGN KEY (id_chamado)	REFERENCES chamado(id),
-	FOREIGN KEY (usuario)		REFERENCES usuario(usuario)
+	FOREIGN KEY (usuario)		REFERENCES usuario(login)
 );
 
 CREATE TABLE chamado_historico(
@@ -281,14 +281,14 @@ CREATE TABLE chamado_historico(
 	id_chamado		INTEGER		NOT NULL,
 	estado_anterior	SMALLINT	NOT NULL,
 	estado_atual	SMALLINT	NOT NULL,
-	usuario			VARCHAR(25)	NOT NULL,
+	usuario			INTEGER 	NOT NULL,
 	data_mudanca	TIMESTAMP	NOT NULL DEFAULT NOW(),
 	
 	PRIMARY KEY (id),
 	FOREIGN KEY (id_chamado)		REFERENCES chamado(id),
 	FOREIGN KEY (estado_anterior)	REFERENCES estado_chamado(id),
 	FOREIGN KEY (estado_atual)		REFERENCES estado_chamado(id),
-	FOREIGN KEY (usuario)			REFERENCES usuario(usuario)
+	FOREIGN KEY (usuario)			REFERENCES usuario(id)
 );
 
 --Tarefas
@@ -311,8 +311,8 @@ CREATE TABLE tarefa(
     estado              SMALLINT        NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (atribuidor)    REFERENCES usuario(usuario),
-    FOREIGN KEY (atribuido)     REFERENCES usuario(usuario),
+    FOREIGN KEY (atribuidor)    REFERENCES usuario(id),
+    FOREIGN KEY (atribuido)     REFERENCES usuario(id),
     FOREIGN KEY (estado)        REFERENCES estado_tarefa(id)
 );
 

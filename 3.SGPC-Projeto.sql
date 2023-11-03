@@ -72,9 +72,9 @@ DECLARE
     v_tipo_usuario INTEGER := 1;
 BEGIN
     INSERT INTO usuario (login, senha, nome, email, telefone, ativo, tipo_usuario, nivel_acesso, data_chegada)
-   	VALUES (v_login, v_senha, v_nome, v_email, v_telefone, v_ativo,v_nivel_acesso,v_tipo_usuario, v_data_chegada) RETURNING id INTO v_id;
+   	VALUES (v_login, v_senha, v_nome, v_email, v_telefone, v_ativo,v_tipo_usuario, v_nivel_acesso, v_data_chegada) RETURNING id INTO v_id;
 
-    INSERT INTO bolsista (matricula, usuario, tipo_bolsista)
+    INSERT INTO bolsista (matricula, id, tipo_bolsista)
     VALUES (v_matricula, v_id, v_tipo_bolsista);
 
 END;

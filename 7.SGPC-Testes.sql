@@ -1,5 +1,13 @@
 SET SCHEMA 'sgpcdatabase';
 
+
+select b1_0.id,b1_1.data_chegada,b1_1.data_saida,b1_1.email,b1_1.login,
+       b1_1.nivel_acesso,b1_1.nome,b1_1.senha,b1_1.ativo,b1_1.telefone,b1_1.tipo_usuario,
+       b1_0.matricula,b1_0.tipo_bolsista
+from sgpcdatabase.bolsista b1_0 join sgpcdatabase.usuario b1_1 on b1_0.id=b1_1.id
+
+select n1_0.id,n1_0.descricao from sgpcdatabase.nivel_acesso n1_0 where n1_0.id=2
+
 select * from bolsistas;
 
 select inserir_bolsista('20170146005',
@@ -12,6 +20,17 @@ select inserir_bolsista('20170146005',
                         '2',
                         '3303',
                         '2017-07-01');
+
+select inserir_bolsista('20200146005',
+                        'F.IagoDantas',
+                        '@12345',
+                        'Felipe Iago Dantas',
+                        'felipeiago.dantas@outlook.com',
+                        '84997039005',
+                        true,
+                        '1',
+                        '6606',
+                        '2020-03-01');
 
 select inserir_supervisor('verinha',
                         '@12345',

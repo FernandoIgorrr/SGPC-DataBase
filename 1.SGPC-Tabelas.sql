@@ -13,7 +13,7 @@ CREATE TABLE tipo_usuario(
 );
 
 CREATE TABLE tipo_bolsista(
-	id	 		SMALLSERIAL,
+	id	 		SMALLINT,
     descricao	VARCHAR(20),
 
 	PRIMARY KEY (id)
@@ -41,11 +41,11 @@ CREATE TABLE tipo_supervisor(
 );
 
 CREATE TABLE usuario(
-    id              SERIAL          NOT NULL,
+    id              BIGSERIAL       NOT NULL,
 	login			VARCHAR(25)		UNIQUE NOT NULL,
 	senha			VARCHAR(80)		NOT NULL,
     nome			VARCHAR(100)	NOT NULL,
-    email       	VARCHAR(50),
+    email       	VARCHAR(50)     NOT NULL UNIQUE,
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
 	nivel_acesso	SMALLINT 		NOT NULL,
@@ -59,21 +59,21 @@ CREATE TABLE usuario(
 );
 
 CREATE TABLE bolsista(
+    id              BIGINT,
     matricula       VARCHAR(12),
-    usuario         INTEGER,
     tipo_bolsista   SMALLINT,
 
     PRIMARY KEY (matricula),
-    FOREIGN KEY (usuario)       REFERENCES usuario(id),
+    FOREIGN KEY (id)       REFERENCES usuario(id),
     FOREIGN KEY (tipo_bolsista) REFERENCES tipo_bolsista(id)
 );
 
 CREATE TABLE supervisor(
-    usuario         INTEGER,
+    id                BIGINT,
     tipo_supervisor   SMALLINT,
 
-    PRIMARY KEY (usuario),
-    FOREIGN KEY (usuario)       REFERENCES usuario(id),
+    PRIMARY KEY (id),
+    FOREIGN KEY (id)              REFERENCES usuario(id),
     FOREIGN KEY (tipo_supervisor) REFERENCES tipo_supervisor(id)
 );
 

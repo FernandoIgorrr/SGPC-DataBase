@@ -1,10 +1,9 @@
           /* ALTER TABLES FOR INCREMENTS */
 SET SCHEMA 'sgpcdatabase';
 
-ALTER SEQUENCE usuario_id_seq           RESTART WITH 666;
+ALTER SEQUENCE usuario_id_seq           RESTART WITH 347895639;
 /*ALTER SEQUENCE nivel_de_acesso_id_seq   RESTART WITH 1100;*/
 ALTER SEQUENCE tipo_patrimonio_id_seq   RESTART WITH 2200;
-ALTER SEQUENCE tipo_bolsista_id_seq     RESTART WITH 3300;
 ALTER SEQUENCE os_pc_id_seq             RESTART WITH 100;
 ALTER SEQUENCE modelo_pc_id_seq         RESTART WITH 200;
 ALTER SEQUENCE patrimonio_id_seq        RESTART WITH 1;         
@@ -15,11 +14,11 @@ INSERT INTO tipo_usuario (descricao) VALUES
 ('Bolsista'),
 ('Surpevisor');
 
-INSERT INTO tipo_bolsista (descricao) VALUES
-('Gerência'),
-('Design'),
-('Avaliação'),
-('Informática');
+INSERT INTO tipo_bolsista (id,descricao) VALUES
+(2202,'Gerência'),
+(7707,'Design'),
+(3303,'Avaliação'),
+(6606,'Informática');
 
 INSERT INTO nivel_acesso (descricao) VALUES
 ('Comum'),

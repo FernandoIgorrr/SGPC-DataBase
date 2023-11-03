@@ -1,5 +1,7 @@
 SET SCHEMA 'sgpcdatabase';
 
+select * from bolsistas;
+
 select inserir_bolsista('20170146005',
                         'F.IgorDantas',
                         '@12345',

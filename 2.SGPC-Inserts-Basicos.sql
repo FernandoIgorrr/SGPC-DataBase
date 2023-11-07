@@ -1,15 +1,14 @@
           /* ALTER TABLES FOR INCREMENTS */
 SET SCHEMA 'sgpcdatabase';
 
-ALTER SEQUENCE usuario_id_seq           RESTART WITH 347895639;
+--ALTER SEQUENCE usuario_id_seq           RESTART WITH 347895639;
 /*ALTER SEQUENCE nivel_de_acesso_id_seq   RESTART WITH 1100;*/
 ALTER SEQUENCE tipo_patrimonio_id_seq   RESTART WITH 2200;
 ALTER SEQUENCE os_pc_id_seq             RESTART WITH 100;
 ALTER SEQUENCE modelo_pc_id_seq         RESTART WITH 200;
-ALTER SEQUENCE patrimonio_id_seq        RESTART WITH 1;         
+--ALTER SEQUENCE patrimonio_id_seq        RESTART WITH 1;
 
 /*      INSERTS PARA ALGUNS DADOS PRE-ESTABELECIDOS       */
-
 INSERT INTO tipo_usuario (descricao) VALUES
 ('Bolsista'),
 ('Surpevisor');
@@ -28,7 +27,8 @@ INSERT INTO tipo_supervisor (descricao) VALUES
 ('Operador'),
 ('Chefe');
 
-INSERT INTO os_pc (nome) VALUES
+
+INSERT INTO os_pc (descricao) VALUES
 ('Windows-10'),
 ('Windows-11'),
 ('Debain'),
@@ -43,7 +43,7 @@ INSERT INTO os_pc (nome) VALUES
 ('DragonFly-BSD'),
 ('Free-BSD');
 
-INSERT INTO modelo_pc (modelo) VALUES
+INSERT INTO modelo_pc (descricao) VALUES
 ('HP Compaq 6005 Pro SFF'),
 ('HP Compaq 6305 Pro SFF'),
 ('HP EliteDesk 705 G1 SFF'),
@@ -52,7 +52,7 @@ INSERT INTO modelo_pc (modelo) VALUES
 ('DELL Opitplex 7050'),
 ('DELL Opitplex 3070 micro');
 
-INSERT INTO ram_pc (id,ram) VALUES
+INSERT INTO ram_pc (id,descricao) VALUES
 (1,'1 GB'),
 (2,'2 GB'),
 (3,'3 GB'),
@@ -63,16 +63,24 @@ INSERT INTO ram_pc (id,ram) VALUES
 (16,'16 GB'),
 (20,'20 GB');
 
-INSERT INTO ram_ddr_pc (id,ddr) VALUES
+INSERT INTO ram_ddr_pc (id,descricao) VALUES
 (2,'ddr2'),
 (3,'ddr3'),
 (4,'ddr4');
 
-INSERT INTO hd_pc (id,hd) VALUES
+INSERT INTO hd_pc (id,descricao) VALUES
 (250,'250 GB'),
 (500,'500 GB'),
 (1,'1 TB'),
 (2,'2 TB');
+
+INSERT INTO estado_patrimonio (descricao) VALUES
+('Bom'),
+('Regular'),
+('Manutenção'),
+('Desgastado'),
+('Mal'),
+('Descartável');
 
 INSERT INTO tipo_patrimonio (descricao) VALUES
 ('Cadeira'),

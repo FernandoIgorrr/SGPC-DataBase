@@ -97,9 +97,9 @@ DECLARE
     v_tipo_usuario INTEGER := 2;
 BEGIN
     INSERT INTO usuario (login, senha, nome, email, telefone, ativo, tipo_usuario, nivel_acesso, data_chegada)
-   	VALUES (v_login, v_senha, v_nome, v_email, v_telefone, v_ativo,v_nivel_acesso,v_tipo_usuario, v_data_chegada) RETURNING id INTO v_id;
+   	VALUES (v_login, v_senha, v_nome, v_email, v_telefone,v_ativo, v_tipo_usuario,v_nivel_acesso, v_data_chegada) RETURNING id INTO v_id;
 
-    INSERT INTO supervisor (usuario, tipo_supervisor)
+    INSERT INTO supervisor (id, tipo_supervisor)
     VALUES (v_id, v_tipo_supervisor);
 
 END;

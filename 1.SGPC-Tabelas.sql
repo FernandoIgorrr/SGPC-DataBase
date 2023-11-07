@@ -13,14 +13,14 @@ CREATE TABLE tipo_usuario(
 );
 
 CREATE TABLE tipo_bolsista(
-	id	 		SMALLINT,
+	id	 		SERIAL,
     descricao	VARCHAR(20),
 
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE tipo_patrimonio(
-	id			SMALLSERIAL,
+	id			SERIAL,
     descricao	VARCHAR(30),
 
     PRIMARY KEY (id)
@@ -40,74 +40,76 @@ CREATE TABLE tipo_supervisor(
 	PRIMARY KEY(id)
 );
 
+CREATE TABLE nivel_acesso(
+	id	 		SERIAL,
+    descricao	VARCHAR(20),
+
+	PRIMARY KEY (id)
+);
+
 CREATE TABLE usuario(
-    id              BIGSERIAL       NOT NULL,
+    id              UUID DEFAULT    gen_random_uuid(),
 	login			VARCHAR(25)		UNIQUE NOT NULL,
 	senha			VARCHAR(80)		NOT NULL,
     nome			VARCHAR(100)	NOT NULL,
     email       	VARCHAR(50)     NOT NULL UNIQUE,
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
-	nivel_acesso	SMALLINT 		NOT NULL,
-    tipo_usuario    SMALLINT        NOT NULL,
+    tipo            VARCHAR(25)        NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
 
-	PRIMARY KEY (id),
-	FOREIGN KEY (nivel_acesso) REFERENCES nivel_acesso(id),
-	FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
+	PRIMARY KEY (id)
 );
 
 CREATE TABLE bolsista(
-    id              BIGINT,
+    id              UUID,
     matricula       VARCHAR(12),
-    tipo_bolsista   SMALLINT,
+    tipo_bolsista   VARCHAR(30),
 
     PRIMARY KEY (matricula),
-    FOREIGN KEY (id)       REFERENCES usuario(id),
-    FOREIGN KEY (tipo_bolsista) REFERENCES tipo_bolsista(id)
+    FOREIGN KEY (id)       REFERENCES usuario(id)
 );
 
 CREATE TABLE supervisor(
-    id                BIGINT,
-    tipo_supervisor   SMALLINT,
+    id                UUID,
+    cargo   VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (id)              REFERENCES usuario(id),
-    FOREIGN KEY (tipo_supervisor) REFERENCES tipo_supervisor(id)
+    FOREIGN KEY (id)              REFERENCES usuario(id)
 );
 
 -- gerencia dos predios
 
 CREATE TABLE complexo(
-	id		SMALLSERIAL NOT NULL,
+	id		SERIAL NOT NULL,
     nome	VARCHAR(20) NOT NULL,
 
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE predio(
-	id			SMALLSERIAL NOT NULL,
+	id			SERIAL NOT NULL,
     nome		VARCHAR(20) NOT NULL,
-    complexo	SMALLINT 	NOT NULL,
+    complexo	INT 	NOT NULL,
 
 	PRIMARY KEY (id),
     FOREIGN KEY (complexo)	REFERENCES Complexo(id)
 );
 
 CREATE TABLE andar(
-	id 		SMALLSERIAL NOT NULL,
+	id 		SERIAL NOT NULL,
     nome	VARCHAR(20) NOT NULL,
-    predio	SMALLINT	NOT NULL,
+    predio	INT	NOT NULL,
 
 	PRIMARY KEY (id),
     FOREIGN KEY (Predio)	REFERENCES Predio(id)
 );
 
 CREATE TABLE comodo(
-	id		SMALLSERIAL NOT NULL,
+	id		SERIAL NOT NULL,
     nome	VARCHAR(20) NOT NULL,
-    andar	SMALLINT 	NOT NULL,
+    andar	INT 	NOT NULL,
 
 	PRIMARY KEY (id),
 	FOREIGN KEY (Andar)	REFERENCES Andar(id)
@@ -115,63 +117,71 @@ CREATE TABLE comodo(
 
 -- gerencia de patrimonio
 
+CREATE TABLE estado_patrimonio(
+    id  SERIAL,
+    descricao VARCHAR(25),
+
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE patrimonio(
-	id			SERIAL	    NOT NULL UNIQUE,
+	id			UUID DEFAULT gen_random_uuid(),
     tombamento	VARCHAR(12) UNIQUE,
     descricao	TEXT	    NOT NULL,
-    estado		VARCHAR(30)	NOT NULL,
-    tipo		SMALLINT	NOT NULL,
-    localidade	SMALLINT	NOT NULL,
+    estado		INT	NOT NULL,
+    tipo		INT	NOT NULL,
+    localidade	INT	NOT NULL,
     alienado    BOOLEAN		NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (tipo) 			REFERENCES tipo_patrimonio(id),
+    FOREIGN KEY (estado)        REFERENCES estado_patrimonio(id),
     FOREIGN KEY (localidade)	REFERENCES comodo(id)
 );
 
 CREATE TABlE os_pc(
-	id		SMALLSERIAL,
-    nome 	TEXT,
+	id		SERIAL,
+    descricao 	TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE modelo_pc(
-	id 		SMALLSERIAL,
-    modelo 	TEXT,
+	id 		SERIAL,
+    descricao 	TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE ram_pc(
-	id 	SMALLINT,
-    ram TEXT,
+	id 	SERIAL,
+    descricao TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE ram_ddr_pc(
-	id 	SMALLINT,
-    ddr TEXT,
+	id 	SERIAL,
+    descricao TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE hd_pc(
-	id SMALLINT,
-    hd TEXT,
+	id SERIAL,
+    descricao TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABLE patrimonio_pc(
-	id			SERIAL		NOT NULL,
-    serialpc    VARCHAR 	UNIQUE,
-    modelo		SMALLINT,
-    os			SMALLINT,
-    ram			SMALLINT	NOT NULL,
-    ram_ddr		SMALLINT	NOT NULL,
-    hd			SMALLINT	NOT NULL,
+	id			UUID,
+    serialpc    VARCHAR     UNIQUE,
+    modelo		INT    NOT NULL,
+    os			INT,
+    ram			INT,
+    ram_ddr		INT,
+    hd			INT,
 
     PRIMARY KEY (id),
 
@@ -185,7 +195,7 @@ CREATE TABLE patrimonio_pc(
 
 CREATE TABLE historico_patrimonio(
     id              SERIAL   	NOT NULL,
-    patrimonio      SMALLINT    NOT NULL,
+    patrimonio      UUID    NOT NULL,
     comodo          SMALLINT    NOT NULL,
     bolsista        VARCHAR(12) ,
     data_chegada    DATE        NOT NULL DEFAULT CURRENT_DATE,
@@ -199,15 +209,15 @@ CREATE TABLE historico_patrimonio(
 
 CREATE TABLE manejo(
     id                  SERIAL   	NOT NULL,
-    patrimonio	        INTEGER	    NOT NULL,
-    usuario             VARCHAR(25) NOT NULL,
+    patrimonio	        UUID	    NOT NULL,
+    usuario             UUID        NOT NULL,
     comodo_anterior     SMALLINT    NOT NULL,
     comodo_posterior    SMALLINT    NOT NULL,
     data_manejo         DATE        NOT NULL DEFAULT CURRENT_DATE,
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)	    REFERENCES patrimonio(id),
-    FOREIGN KEY (usuario)	        REFERENCES usuario(login),
+    FOREIGN KEY (usuario)	        REFERENCES usuario(id),
     FOREIGN KEY (comodo_anterior)	REFERENCES comodo(id),
     FOREIGN KEY (comodo_posterior)	REFERENCES comodo(id)
 );
@@ -239,8 +249,8 @@ CREATE TABLE estado_chamado(
 
 CREATE TABLE chamado(
 	id				SERIAL	 	NOT NULL UNIQUE,
-	criador			INTEGER	    NOT NULL,
-	fechador		INTEGER,
+	criador			UUID	    NOT NULL,
+	fechador		UUID,
 	data_abertura	TIMESTAMP 	NOT NULL DEFAULT NOW(),
 	data_fechamento	TIMESTAMP,
 	titulo			TEXT		NOT NULL,
@@ -258,43 +268,43 @@ CREATE TABLE chamado(
 );
 
 CREATE TABLE chamado_patrimonio(
-	id_chamado		INTEGER 	NOT NULL,
-	id_patrimonio 	INTEGER 	NOT NULL,
+	chamado		INTEGER 	NOT NULL,
+	patrimonio 	UUID 	NOT NULL,
 	
-	FOREIGN KEY (id_chamado) 	REFERENCES chamado(id),
-	FOREIGN KEY (id_patrimonio) REFERENCES patrimonio(id)
+	FOREIGN KEY (chamado) 	REFERENCES chamado(id),
+	FOREIGN KEY (patrimonio) REFERENCES patrimonio(id)
 );
 
 CREATE TABLE chamado_bolsista(
-	id_chamado	INTEGER		NOT NULL,
+	chamado	INTEGER		NOT NULL,
 	bolsista 	VARCHAR(12) NOT NULL,
 	
-	FOREIGN KEY (id_chamado)    REFERENCES chamado(id),
+	FOREIGN KEY (chamado)    REFERENCES chamado(id),
 	FOREIGN KEY (bolsista)	    REFERENCES bolsista(matricula)
 );
 
 CREATE TABLE chamado_comentario(
 	id				SERIAL		NOT NULL,
-	id_chamado		INTEGER		NOT NULL,
-	usuario			VARCHAR(25)	NOT NULL,
+	chamado		INTEGER		NOT NULL,
+	usuario			UUID	NOT NULL,
 	comentario		TEXT		NOT NULL,
 	data_comentario	TIMESTAMP 	NOT NULL DEFAULT NOW(),
 
 	PRIMARY KEY (id),
-	FOREIGN KEY (id_chamado)	REFERENCES chamado(id),
-	FOREIGN KEY (usuario)		REFERENCES usuario(login)
+	FOREIGN KEY (chamado)	REFERENCES chamado(id),
+	FOREIGN KEY (usuario)		REFERENCES usuario(id)
 );
 
 CREATE TABLE chamado_historico(
 	id				SERIAL		NOT NULL,
-	id_chamado		INTEGER		NOT NULL,
+	chamado		INTEGER		NOT NULL,
 	estado_anterior	SMALLINT	NOT NULL,
 	estado_atual	SMALLINT	NOT NULL,
-	usuario			INTEGER 	NOT NULL,
+	usuario			UUID 	NOT NULL,
 	data_mudanca	TIMESTAMP	NOT NULL DEFAULT NOW(),
 	
 	PRIMARY KEY (id),
-	FOREIGN KEY (id_chamado)		REFERENCES chamado(id),
+	FOREIGN KEY (chamado)		REFERENCES chamado(id),
 	FOREIGN KEY (estado_anterior)	REFERENCES estado_chamado(id),
 	FOREIGN KEY (estado_atual)		REFERENCES estado_chamado(id),
 	FOREIGN KEY (usuario)			REFERENCES usuario(id)
@@ -311,8 +321,8 @@ CREATE TABLE estado_tarefa(
 
 CREATE TABLE tarefa(
     id                  SMALLINT          NOT NULL,
-    atribuidor			SMALLINT		NOT NULL,
-	atribuido			SMALLINT	NOT NULL,
+    atribuidor			UUID		NOT NULL,
+	atribuido			UUID	NOT NULL,
     descricao           TEXT            NOT NULL,
     prazo               SMALLINT,
     data_abertura	    TIMESTAMP 	    NOT NULL DEFAULT NOW(),

@@ -194,16 +194,16 @@ CREATE TABLE patrimonio_pc(
 );
 
 CREATE TABLE historico_patrimonio(
-    id              SERIAL   	NOT NULL,
-    patrimonio      UUID    NOT NULL,
+    id              BIGSERIAL   NOT NULL,
+    patrimonio      UUID        NOT NULL,
     comodo          SMALLINT    NOT NULL,
-    bolsista        VARCHAR(12) ,
+    usuario         UUID        NOT NULL,
     data_chegada    DATE        NOT NULL DEFAULT CURRENT_DATE,
     data_saida      DATE,
 
     PRIMARY KEY (id),
     FOREIGN KEY (patrimonio)    REFERENCES patrimonio(id),
-    FOREIGN KEY (bolsista)	    REFERENCES usuario(login),
+    FOREIGN KEY (usuario)	    REFERENCES usuario(id),
     FOREIGN KEY (comodo)        REFERENCES comodo(id)
 );
 

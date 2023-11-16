@@ -40,13 +40,6 @@ CREATE TABLE tipo_supervisor(
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE nivel_acesso(
-	id	 		SERIAL,
-    descricao	VARCHAR(20),
-
-	PRIMARY KEY (id)
-);
-
 CREATE TABLE usuario(
     id              UUID DEFAULT    gen_random_uuid(),
 	login			VARCHAR(25)		UNIQUE NOT NULL,

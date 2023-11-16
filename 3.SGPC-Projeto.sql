@@ -262,11 +262,12 @@ EXECUTE PROCEDURE inserir_patrimonio();
 
 
 CREATE OR REPLACE VIEW patrimonios_completo AS
-SELECT pa.tombamento AS tombamento, pa.descricao AS descricao, pa.estado AS estado,  
+SELECT pa.id AS id, pa.tombamento AS tombamento, pa.descricao AS descricao, ep.descricao AS estado,
 tp.descricao AS tipo, co.nome AS comodo, an.nome AS andar, pr.nome AS predio, 
 com.nome AS complexo
 
-FROM patrimonio AS pa 
+FROM patrimonio AS pa
+INNER JOIN estado_patrimonio AS ep ON pa.estado = ep.id
 INNER JOIN tipo_patrimonio AS tp ON pa.tipo = tp.id
 INNER JOIN comodo AS co ON pa.localidade = co.id
 INNER JOIN andar AS an ON co.andar = an.id

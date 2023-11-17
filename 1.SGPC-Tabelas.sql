@@ -6,21 +6,21 @@ SET SCHEMA 'sgpcdatabase';
 -- gerencia de pessoal: funcionario e bolsista test
 
 CREATE TABLE tipo_usuario(
-	id	 		SMALLSERIAL,
-    descricao	VARCHAR(20),
-
-	PRIMARY KEY (id)
-);
-
-CREATE TABLE tipo_bolsista(
 	id	 		SERIAL,
     descricao	VARCHAR(20),
 
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE tipo_bolsista(
+	id	 		SMALLSERIAL,
+    descricao	VARCHAR(20),
+
+	PRIMARY KEY (id)
+);
+
 CREATE TABLE tipo_patrimonio(
-	id			SERIAL,
+	id			SMALLSERIAL,
     descricao	VARCHAR(30),
 
     PRIMARY KEY (id)
@@ -48,61 +48,64 @@ CREATE TABLE usuario(
     email       	VARCHAR(50)     NOT NULL UNIQUE,
     telefone    	VARCHAR(12),
 	ativo			BOOLEAN			NOT NULL,
-    tipo            VARCHAR(25)        NOT NULL,
+    tipo_usuario    INT        NOT NULL,
 	data_chegada	DATE,
 	data_saida		DATE,
 
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+    FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
 );
 
 CREATE TABLE bolsista(
-    id              UUID,
-    matricula       VARCHAR(12),
-    tipo_bolsista   VARCHAR(30),
+    id                          UUID,
+    matricula                   VARCHAR(12) UNIQUE,
+    tipo_bolsista               SMALLINT NOT NULL,
 
     PRIMARY KEY (matricula),
-    FOREIGN KEY (id)       REFERENCES usuario(id)
+    FOREIGN KEY (id)             REFERENCES usuario(id),
+    FOREIGN KEY (tipo_bolsista)  REFERENCES tipo_bolsista(id)
 );
 
 CREATE TABLE supervisor(
-    id                UUID,
-    cargo   VARCHAR(50) NOT NULL,
+    id                  UUID,
+    tipo_supervisor     SMALLINT NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (id)              REFERENCES usuario(id)
+    FOREIGN KEY (id)    REFERENCES usuario(id),
+    FOREIGN KEY (tipo_supervisor)  REFERENCES tipo_supervisor(id)
 );
 
 -- gerencia dos predios
 
 CREATE TABLE complexo(
-	id		SERIAL NOT NULL,
+	id		SMALLSERIAL NOT NULL,
     nome	VARCHAR(20) NOT NULL,
 
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE predio(
-	id			SERIAL NOT NULL,
+	id			SMALLSERIAL NOT NULL,
     nome		VARCHAR(20) NOT NULL,
-    complexo	INT 	NOT NULL,
+    complexo	SMALLINT 	NOT NULL,
 
 	PRIMARY KEY (id),
     FOREIGN KEY (complexo)	REFERENCES Complexo(id)
 );
 
 CREATE TABLE andar(
-	id 		SERIAL NOT NULL,
+	id 		SMALLSERIAL NOT NULL,
     nome	VARCHAR(20) NOT NULL,
-    predio	INT	NOT NULL,
+    predio	SMALLINT	NOT NULL,
 
 	PRIMARY KEY (id),
     FOREIGN KEY (Predio)	REFERENCES Predio(id)
 );
 
 CREATE TABLE comodo(
-	id		SERIAL NOT NULL,
+	id		SMALLSERIAL NOT NULL,
     nome	VARCHAR(20) NOT NULL,
-    andar	INT 	NOT NULL,
+    andar	SMALLINT 	NOT NULL,
 
 	PRIMARY KEY (id),
 	FOREIGN KEY (Andar)	REFERENCES Andar(id)
@@ -111,7 +114,7 @@ CREATE TABLE comodo(
 -- gerencia de patrimonio
 
 CREATE TABLE estado_patrimonio(
-    id  SERIAL,
+    id  SMALLSERIAL,
     descricao VARCHAR(25),
 
     PRIMARY KEY (id)
@@ -121,9 +124,9 @@ CREATE TABLE patrimonio(
 	id			UUID DEFAULT gen_random_uuid(),
     tombamento	VARCHAR(12) UNIQUE,
     descricao	TEXT	    NOT NULL,
-    estado		INT	NOT NULL,
-    tipo		INT	NOT NULL,
-    localidade	INT	NOT NULL,
+    estado		SMALLINT	NOT NULL,
+    tipo		SMALLINT	NOT NULL,
+    localidade	SMALLINT	NOT NULL,
     alienado    BOOLEAN		NOT NULL,
 
     PRIMARY KEY (id),
@@ -133,35 +136,35 @@ CREATE TABLE patrimonio(
 );
 
 CREATE TABlE os_pc(
-	id		SERIAL,
+	id		SMALLSERIAL,
     descricao 	TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE modelo_pc(
-	id 		SERIAL,
+	id 		SMALLSERIAL,
     descricao 	TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE ram_pc(
-	id 	SERIAL,
+	id 	SMALLSERIAL,
     descricao TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE ram_ddr_pc(
-	id 	SERIAL,
+	id 	SMALLSERIAL,
     descricao TEXT,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABlE hd_pc(
-	id SERIAL,
+	id SMALLSERIAL,
     descricao TEXT,
 
     PRIMARY KEY (id)
@@ -170,11 +173,11 @@ CREATE TABlE hd_pc(
 CREATE TABLE patrimonio_pc(
 	id			UUID,
     serialpc    VARCHAR     UNIQUE,
-    modelo		INT    NOT NULL,
-    os			INT,
-    ram			INT,
-    ram_ddr		INT,
-    hd			INT,
+    modelo		SMALLINT    NOT NULL,
+    os			SMALLINT,
+    ram			SMALLINT,
+    ram_ddr		SMALLINT,
+    hd			SMALLINT,
 
     PRIMARY KEY (id),
 
@@ -186,22 +189,8 @@ CREATE TABLE patrimonio_pc(
 	FOREIGN KEY (hd)        REFERENCES hd_pc(id)
 );
 
-CREATE TABLE historico_patrimonio(
-    id              BIGSERIAL   NOT NULL,
-    patrimonio      UUID        NOT NULL,
-    comodo          SMALLINT    NOT NULL,
-    usuario         UUID        NOT NULL,
-    data_chegada    DATE        NOT NULL DEFAULT CURRENT_DATE,
-    data_saida      DATE,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (patrimonio)    REFERENCES patrimonio(id),
-    FOREIGN KEY (usuario)	    REFERENCES usuario(id),
-    FOREIGN KEY (comodo)        REFERENCES comodo(id)
-);
-
 CREATE TABLE manejo(
-    id                  SERIAL   	NOT NULL,
+    id                  BIGSERIAL   	NOT NULL,
     patrimonio	        UUID	    NOT NULL,
     usuario             UUID        NOT NULL,
     comodo_anterior     SMALLINT    NOT NULL,
@@ -222,7 +211,6 @@ CREATE TABLE responsabilidade(
     FOREIGN KEY (bolsista)   REFERENCES bolsista(matricula),
     FOREIGN KEY (predio)     REFERENCES predio(id)
 );
-
 
 --	CHAMADOS
 

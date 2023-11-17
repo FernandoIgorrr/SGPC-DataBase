@@ -10,14 +10,14 @@ ALTER SEQUENCE modelo_pc_id_seq         RESTART WITH 200;
 
 /*      INSERTS PARA ALGUNS DADOS PRE-ESTABELECIDOS       */
 INSERT INTO tipo_usuario (descricao) VALUES
-('Bolsista'),
-('Surpevisor');
+('Surpevisor'),
+('Bolsista');
 
-INSERT INTO tipo_bolsista (id,descricao) VALUES
-(2202,'Gerência'),
-(7707,'Design'),
-(3303,'Avaliação'),
-(6606,'Informática');
+INSERT INTO tipo_bolsista (descricao) VALUES
+('Gerência'),
+('Design'),
+('Avaliação'),
+('Informática');
 
 INSERT INTO nivel_acesso (descricao) VALUES
 ('Comum'),
@@ -25,6 +25,7 @@ INSERT INTO nivel_acesso (descricao) VALUES
 
 INSERT INTO tipo_supervisor (descricao) VALUES
 ('Operador'),
+('Administrador'),
 ('Chefe');
 
 
@@ -64,9 +65,9 @@ INSERT INTO ram_pc (id,descricao) VALUES
 (20,'20 GB');
 
 INSERT INTO ram_ddr_pc (id,descricao) VALUES
-(2,'ddr2'),
-(3,'ddr3'),
-(4,'ddr4');
+(2,'DDR2'),
+(3,'DDR3'),
+(4,'DDR4');
 
 INSERT INTO hd_pc (id,descricao) VALUES
 (250,'250 GB'),

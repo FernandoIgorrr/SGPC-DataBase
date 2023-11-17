@@ -1,6 +1,7 @@
 SET SCHEMA 'sgpcdatabase';
 
-
+DELETE FROM patrimonio_pc where 1=1;
+DELETE FROM patrimonio WHERE tipo=2205;
 select c1_0.id,c1_1.alienado,c1_1.descricao,c1_1.estado,c1_1.localidade,c1_1.tipo,c1_1.tombamento,c1_0.hd,c1_0.modelo,c1_0.ram,c1_0.ram_ddr,c1_0.serialpc,c1_0.os from sgpcdatabase.patrimonio_pc c1_0 join sgpcdatabase.patrimonio c1_1 on c1_0.id=c1_1.id;
 
 select e1_0.id,e1_0.descricao from sgpcdatabase.estado_patrimonio e1_0 where e1_0.id=1

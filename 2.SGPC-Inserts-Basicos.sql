@@ -125,13 +125,14 @@ INSERT INTO estado_chamado (id,descricao) VALUES
 INSERT INTO complexo (nome) VALUES
 ('CAMPUS'),
 ('BIOMÉDICA'),
-('PÓS-GRADUAÇÃO/POUSO'),
+('POUSO'),
 ('PRAÇA CÍVICA'),
 ('MIPIBU'),
 ('REITORIA'),
 ('SANTA CRUZ'),
 ('MOSSORÓ'),
-('CAICÓ');
+('CAICÓ'),
+('CURRAIS NOVOS');
 
     /*  COMPLEXO CAMPUS */
 INSERT INTO predio (nome,complexo) VALUES
@@ -142,33 +143,20 @@ INSERT INTO predio (nome,complexo) VALUES
     /*  COMPLEXO BIOMÉDICA */
 
 INSERT INTO predio (nome,complexo) VALUES
-('CASA 4',2),
-('CASA 6',2),
-('CASA 8',2),
-('CASA 10',2),
-('CASA 12',2),
-('CASA 14',2),
-('CASA 16',2),
-('CASA 18',2),
-('CASA 20',2),
-('CASA 22',2),
-('CASA 24',2),
-('CASA 26',2),
-('CASA 28',2),
-('CASA 30',2),
-('CASA 32',2);
+('CONJUNTO CASAS',2);
 
     /* OUTROS COMPLEXOS QUE SÓ TEM UM PŔEDIO */
 
 INSERT INTO predio (nome,complexo) VALUES
 
-('PÓS-GRADUAÇÃO/POUSO',3),
+('PÓS-GRADUAÇÃO',3),
 ('PRAÇA CÍVICA',4),
 ('MIPIBU',5),
-('PROAE',6),
+('REITORIA',6),
 ('SANTA CRUZ',7),
 ('MOSSORÓ',8),
-('CAICÓ',9);
+('CAICÓ',9),
+('CURRAIS NOVOS',10);
             /* CAMPUS I */
 INSERT INTO andar (nome,predio) VALUES
 ('PISO I',1),
@@ -195,38 +183,39 @@ INSERT INTO andar (nome,predio) VALUES
 
             /* BIOMÉDICA */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',5),
-('TÉRREO',6),
-('TÉRREO',7),
-('TÉRREO',8),
-('TÉRREO',9),
-('TÉRREO',10),
-('TÉRREO',11),
-('TÉRREO',12),
-('TÉRREO',13),
-('TÉRREO',14),
-('TÉRREO',15),
-('TÉRREO',16),
-('TÉRREO',17),
-('TÉRREO',18),
-('TÉRREO',19);
+('TÉRREO',5);
 
             /* PÓS-GRADUAÇÃO */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',20);
+('TÉRREO',6);
 
             /* PRAÇA CÍVICA */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',21);
+('TÉRREO',7);
 
             /* MIPIBU */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',22);
+('TÉRREO',8);
 
             /* PROAE */
 INSERT INTO andar (nome,predio) VALUES
-('TÉRREO',23),
-('PRIMEIRO ANDAR',23);
+('PRIMEIRO ANDAR',9);
+
+            /* SANTA CRUZ */
+INSERT INTO andar (nome,predio) VALUES
+('SANTA CRUZ',10);
+
+            /* MOSSORÓ */
+INSERT INTO andar (nome,predio) VALUES
+('MOSSORÓ',11);
+
+           /* CAICÓ */
+INSERT INTO andar (nome,predio) VALUES
+('CAICÓ',12);
+
+           /* CURRAIS NOVOS */
+INSERT INTO andar (nome,predio) VALUES
+('CURRAIS NOVOS',13);
 
            /* PISO I - CAMPUS I */
 INSERT INTO comodo (nome,andar) VALUES
@@ -419,3 +408,46 @@ INSERT INTO comodo (nome,andar) VALUES
 ('BANHEIRO',12);
 
             /*      BIOMÉDICA       */
+
+INSERT INTO comodo (nome,andar) VALUES
+('CASA 4',13),
+('CASA 6',13),
+('CASA 8',13),
+('CASA 10',13),
+('CASA 12',13),
+('CASA 14',13),
+('CASA 16',13),
+('CASA 18',13),
+('CASA 20',13),
+('CASA 22',13),
+('CASA 24',13),
+('CASA 26',13),
+('CASA 28',13),
+('CASA 30',13),
+('CASA 32',13);
+
+            /*      POS-GRADUAÇÃO   */
+
+INSERT INTO comodo (nome,andar) VALUES
+('PÓS-GRADUAÇÃO',14);
+
+                  /* PRAÇA CÍVICA */
+INSERT INTO comodo (nome,andar) VALUES
+('PRAÇA CÍVICA',15);
+
+            /* MIPIBU */
+INSERT INTO comodo (nome,andar) VALUES
+('MIPIBU',16);
+
+            /* PROAE */
+INSERT INTO comodo (nome,andar) VALUES
+('DGRU',17),
+('SALA DE INFORMÁTICA',17);
+
+            /* SANTA CRUZ/MOSSORÓ/CAICÓ/CURRAIS NOVOS */
+INSERT INTO comodo (nome,andar) VALUES
+('SANTA CRUZ',18),
+('MOSSORÓ',19),
+('CAICÓ',20),
+('CURRAIS NOVOS',21);
+

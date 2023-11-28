@@ -2,7 +2,13 @@ SET SCHEMA 'sgpcdatabase';
 
 DELETE FROM supervisor where 1=1;
 DELETE FROM usuario where 1=1;
-DELETE FROM patrimonio WHERE tipo=2205;
+
+select u1_0.id,u1_0.tipo_usuario,u1_0.ativo,u1_0.data_chegada,u1_0.data_saida,u1_0.email,u1_0.login,u1_0.nome,u1_0.senha,u1_0.telefone,u1_1.matricula,u1_1.tipo_bolsista,u1_2.tipo_supervisor from sgpcdatabase.usuario u1_0 left join sgpcdatabase.bolsista u1_1 on u1_0.id=u1_1.id left join sgpcdatabase.supervisor u1_2 on u1_0.id=u1_2.id where u1_0.login='Verinha';
+
+
+DELETE FROM patrimonio_pc WHERE 1=1;
+DELETE FROM patrimonio WHERE 1=1;
+
 select c1_0.id,c1_1.alienado,c1_1.descricao,c1_1.estado,c1_1.localidade,c1_1.tipo,c1_1.tombamento,c1_0.hd,c1_0.modelo,c1_0.ram,c1_0.ram_ddr,c1_0.serialpc,c1_0.os from sgpcdatabase.patrimonio_pc c1_0 join sgpcdatabase.patrimonio c1_1 on c1_0.id=c1_1.id;
 
 select e1_0.id,e1_0.descricao from sgpcdatabase.estado_patrimonio e1_0 where e1_0.id=1

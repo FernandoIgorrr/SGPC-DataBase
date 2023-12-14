@@ -189,6 +189,17 @@ CREATE TABLE patrimonio_pc(
 	FOREIGN KEY (hd)        REFERENCES hd_pc(id)
 );
 
+CREATE TABLE alienamento(
+    id SERIAL NOT NULL,
+    patrimonio	        UUID	    NOT NULL,
+    usuario             UUID        NOT NULL,
+    data_alienamento    DATE        NOT NULL DEFAULT CURRENT_DATE,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (patrimonio)	    REFERENCES patrimonio(id),
+    FOREIGN KEY (usuario)	        REFERENCES usuario(id)
+);
+
 CREATE TABLE manejo(
     id                  BIGSERIAL   	NOT NULL,
     patrimonio	        UUID	    NOT NULL,

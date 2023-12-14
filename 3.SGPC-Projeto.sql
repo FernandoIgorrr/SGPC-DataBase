@@ -197,7 +197,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;	
 
-
+bol
 CREATE OR REPLACE TRIGGER t_inserir_no_historico
 AFTER INSERT ON patrimonio
 FOR EACH ROW 
